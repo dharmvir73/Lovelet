@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Lovelet requires Next.js server rendering and API routes.
+# This adapter generates Netlify functions and routing from the Next.js build.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

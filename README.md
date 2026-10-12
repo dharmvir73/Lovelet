@@ -56,6 +56,22 @@ npm start
 
 Place behind HTTPS. Restrict database/bucket access to the server. Use a private bucket, and configure lifecycle/backup policies consistent with the retention promises. Dynamic APIs use the Node.js runtime, not Edge. Schema initialization runs automatically; this initial release has no database migrations yet.
 
+### Deploy on Netlify
+
+Connect `dharmvir73/Lovelet` through **Import an existing project** and deploy branch `main`. The committed `netlify.toml` configures:
+
+- **Base directory:** repository root (leave blank).
+- **Build command:** `npm run build`.
+- **Publish directory:** `.next`.
+- **Node.js:** 24.
+- **Next.js runtime:** `@netlify/plugin-nextjs`, installed as a build dependency.
+
+Use a Git-connected build so Netlify runs the Next.js adapter and generates the server functions and routing. Uploading the source repository, `public/`, or an unadapted `.next/` folder through manual drag-and-drop does not deploy this application. Lovelet requires server rendering and API routes; a generic redirect to `/index.html` or a static export would break the builder and payment backend.
+
+If you see Netlify's generic **Page not found** screen, check that the published deploy comes from the latest `main` commit and its build log includes the Next.js runtime. Redeploy after connecting Git or correcting the base/build/publish settings. Inspect failed deploy logs rather than publishing an empty directory.
+
+For the landing page and fictional `/demo`, no database/payment credentials are needed. For draft saving, purchases, and shared pages, add the production variables above in Netlify's environment settings, including a PostgreSQL database and private object storage. Set `APP_URL` to the exact HTTPS Netlify/custom domain. Keep `ALLOW_LOCAL_STORAGE` unset on Netlify: functions do not provide persistent local storage. Never enable demo payment publication in production. Schedule authenticated `/api/cleanup` calls externally as described below.
+
 ### Razorpay
 
 1. Complete activation/KYC and publish accurate business details, terms, privacy, refunds/cancellations and digital-delivery policies. The policies page is starter text: the operator must review it and applicable tax treatment before launch.
